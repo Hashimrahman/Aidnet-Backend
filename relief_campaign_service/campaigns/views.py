@@ -165,9 +165,6 @@ class LeaveCampaignView(APIView):
 #             "role": user.role,
 #             "is_authenticated": user.is_authenticated
 #         })
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 import logging
 from django.contrib.auth.models import AnonymousUser
 logger = logging.getLogger(__name__)

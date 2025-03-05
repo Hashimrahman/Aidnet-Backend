@@ -1,4 +1,4 @@
-# version: '3.8'
+# ~# version: '3.8'
 
 # services:
 #   user-service:
@@ -166,6 +166,11 @@ services:
         condition: service_healthy
     volumes:
       - ./relief_campaign_service:/app
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      DJANGO_SETTINGS_MODULE: relief_campaign_service.settings
     networks:
       - aidnet_network
     command: >
@@ -187,6 +192,32 @@ services:
       - aidnet_network
     command: >
       sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  
+  chat-service:
+    build: ./chat_service
+    container_name: chat_service
+    ports:
+      - "8003:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./chat_service:/app
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      REDIS_HOST: redis
+      DJANGO_SETTINGS_MODULE: chat_service.settings
+    networks:
+      - aidnet_network
+    command: >
+      sh -c "sleep 10 && python manage.py migrate &&
+      daphne -b 0.0.0.0 -p 8000 chat_service.asgi:application"
   
   rabbitmq:
     image: rabbitmq:3-management

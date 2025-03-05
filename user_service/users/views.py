@@ -16,8 +16,8 @@ User = get_user_model()
 class RegistrationView(APIView):
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
-        if user:
-           print("hi")
+        # if user:
+        #    print("hi")
         if serializer.is_valid():
             try:
                 with transaction.atomic():
