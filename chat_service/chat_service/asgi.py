@@ -1,16 +1,17 @@
-"""
-ASGI config for chat_service project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
-"""
-
 import os
-
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
 
+# Set the DJANGO_SETTINGS_MODULE environment variable
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat_service.settings')
 
-application = get_asgi_application()
+# Initialize Django ASGI application early to ensure apps are loaded
+django_asgi_app = get_asgi_application()
+
+# Import chat.routing *after* Django is initialized
+from chat import routing  # noqa: E402 (ignore import-after-code warning)
+
+application = ProtocolTypeRouter({
+    "http": django_asgi_app,
+    "websocket": URLRouter(routing.websocket_urlpatterns),
+})

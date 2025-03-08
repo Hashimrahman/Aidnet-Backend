@@ -1,7 +1,8 @@
 # urls.py
 from django.urls import path
-from .views import CampaignListView
+from . import views
 
 urlpatterns = [
-    path('campaigns/', CampaignListView.as_view(), name='campaign-list'),
+    path('campaigns/', views.CampaignListView.as_view(), name='campaign-list'),
+    path('chatrooms/', views.ChatRoomListAPIView.as_view(), name='chat-rooms')
 ]

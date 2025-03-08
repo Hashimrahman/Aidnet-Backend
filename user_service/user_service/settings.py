@@ -60,6 +60,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8001',
     'http://localhost:8002',
+    'http://localhost:8003',
 ]
 
 ROOT_URLCONF = 'user_service.urls'

@@ -46,7 +46,7 @@
 #       - aidnet_network
 #     command: >
 #       sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  
+
 #   donation-service:
 #     build: ./donation_service
 #     container_name: donation_service
@@ -65,7 +65,7 @@
 #       - aidnet_network
 #     command: >
 #       sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  
+
 #   rabbitmq:
 #     image: rabbitmq:3-management
 #     container_name: rabbitmq
@@ -85,7 +85,7 @@
 #     restart: always
 #     networks:
 #      - aidnet_network
-    
+
 #   celery_worker_relief:
 #     build: ./relief_campaign_service
 #     container_name: relief_campaign_celery
@@ -125,7 +125,6 @@
 #   aidnet_network:
 #     driver: bridge
 
-
 version: '3.8'
 
 services:
@@ -149,8 +148,7 @@ services:
     networks:
       - aidnet_network
     command: >
-      sh -c "sleep 10 && python manage.py migrate &&
-      (python manage.py runserver 0.0.0.0:8000 & python users/consumer.py)"
+      sh -c "sleep 10 && python manage.py migrate && (python manage.py runserver 0.0.0.0:8000 & python users/consumer.py)"
 
   relief-campaign-service:
     build: ./relief_campaign_service
@@ -175,7 +173,7 @@ services:
       - aidnet_network
     command: >
       sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  
+
   donation-service:
     build: ./donation_service
     container_name: donation_service
@@ -192,7 +190,7 @@ services:
       - aidnet_network
     command: >
       sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  
+
   chat-service:
     build: ./chat_service
     container_name: chat_service
@@ -201,6 +199,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      user-service:
+        condition: service_started
       redis:
         condition: service_healthy
       rabbitmq:
@@ -216,9 +216,28 @@ services:
     networks:
       - aidnet_network
     command: >
-      sh -c "sleep 10 && python manage.py migrate &&
-      daphne -b 0.0.0.0 -p 8000 chat_service.asgi:application"
-  
+      sh -c "sleep 10 && python manage.py makemigrations chat && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 chat_service.asgi:application"
+
+  chat-consumer:
+    build: ./chat_service
+    container_name: chat_consumer
+    depends_on:
+      chat-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      DJANGO_SETTINGS_MODULE: chat_service.settings
+    networks:
+      - aidnet_network
+    command: >
+      sh -c "sleep 15 && python chat/consumer.py"
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -232,7 +251,7 @@ services:
     networks:
       - aidnet_network
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
+      test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -242,12 +261,12 @@ services:
     container_name: redis
     restart: always
     networks:
-     - aidnet_network
+      - aidnet_network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       retries: 5
-    
+
   celery_worker_relief:
     build: ./relief_campaign_service
     container_name: relief_campaign_celery
@@ -279,13 +298,14 @@ services:
     networks:
       - aidnet_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       retries: 5
       timeout: 5s
 
 volumes:
   postgres_data:
+
 
 networks:
   aidnet_network:

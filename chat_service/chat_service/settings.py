@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,13 +39,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chat',
-    'rest_framework'
-    
+    'rest_framework',
+    'channels',
+    'corsheaders',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:8001',
+    'http://localhost:8002',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -53,6 +62,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'chat_service.urls'
+
+ASGI_APPLICATION = "chat_service.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
 
 TEMPLATES = [
     {
@@ -70,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'chat_service.wsgi.application'
+# WSGI_APPLICATION = 'chat_service.wsgi.application'
 
 
 # Database
