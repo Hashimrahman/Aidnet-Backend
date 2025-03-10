@@ -82,11 +82,12 @@
 #         return f"User {self.user_id} joined {self.campaign.name} as {self.participant_type}"
 
 
-import uuid
-from django.db import models
-from django.core.exceptions import ValidationError
 import json
+import uuid
+
 import pika  # RabbitMQ client
+from django.core.exceptions import ValidationError
+from django.db import models
 
 
 class Campaign(models.Model):

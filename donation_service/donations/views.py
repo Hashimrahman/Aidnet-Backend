@@ -1,10 +1,11 @@
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from .serializer import DonationSerializer
-from rest_framework.permissions import IsAuthenticated
+
 from .models import Donation
+from .serializer import DonationSerializer
 
 
 class TestAPI(APIView):

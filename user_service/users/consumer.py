@@ -1,8 +1,9 @@
-import pika
 import json
 import os
-import django
 import sys
+
+import django
+import pika
 
 # Set the Django settings module
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "User_Service.settings")
@@ -13,6 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 django.setup()
 
 from users.models import CustomUser
+
 
 def process_message(ch, method, properties, body):
     user_request = json.loads(body)

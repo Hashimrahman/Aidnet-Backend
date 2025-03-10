@@ -1,6 +1,6 @@
 import requests
-from rest_framework.permissions import BasePermission
 from django.conf import settings
+from rest_framework.permissions import BasePermission
 
 USER_SERVICE_URL = "http://localhost:8000/user/users/" 
 

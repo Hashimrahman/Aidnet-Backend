@@ -1,16 +1,19 @@
 import os
-import django
 import sys
+
+import django
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat_service.settings')
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 django.setup()
 
 import json
-import pika
 import logging
 import time
-from django.utils import timezone
+
+import pika
 from chat.models import Campaign, ChatRoom
+from django.utils import timezone
 
 logger = logging.getLogger('django')
 
@@ -35,7 +38,7 @@ def connect_to_rabbitmq():
                 raise Exception("Could not connect to RabbitMQ after multiple attempts")
 
 def consume_campaign_events():
-    # Listen for campaign creation events and store them in the database.
+    # Listen for campaign creation events and store them in the db.
     try:
         connection = connect_to_rabbitmq()
         channel = connection.channel()
@@ -46,7 +49,6 @@ def consume_campaign_events():
                 event = json.loads(body)
                 logger.info(f"Received campaign event: {event}")
 
-                # Parse datetime strings safely
                 start_date_str = event["start_date"].replace("Z", "+00:00")
                 start_date = timezone.datetime.fromisoformat(start_date_str).date()
                 logger.debug(f"Parsed start_date: {start_date}")

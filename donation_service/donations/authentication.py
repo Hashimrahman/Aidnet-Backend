@@ -1,6 +1,7 @@
-import requests
 import logging
 from types import SimpleNamespace
+
+import requests
 from django.conf import settings
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.authentication import JWTAuthentication

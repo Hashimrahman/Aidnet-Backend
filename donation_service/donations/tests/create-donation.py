@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
+from donations.models import Donation
 from rest_framework import status
 from rest_framework.test import APITestCase
-from donations.models import Donation
-from django.contrib.auth.models import User
+
 
 class DonationCreateAPITestCase(APITestCase):
     

@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import Campaign, CampaignParticipation
+
 
 class CampaignParticipationSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,9 +1,12 @@
-from django.test import TestCase
-from rest_framework.test import APIClient
-from rest_framework import status
-from django.contrib.auth.models import User
 from unittest.mock import patch
+
+from django.contrib.auth.models import User
+from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APIClient
+
 from .models import Campaign, CampaignParticipation
+
 
 class CampaignAPITestCase(TestCase):
     def setUp(self):

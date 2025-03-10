@@ -1,10 +1,11 @@
-# chat_service/chat/consumers.py
 import json
 import logging
+
 import aiohttp
-from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
+
 from .models import ChatRoom, Message
 
 logger = logging.getLogger("django")
@@ -51,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     text_data=json.dumps({
                         "message": msg.content,
                         "user_id": msg.user_id,
-                        "user_name": msg.user_name,  # Use stored user_name
+                        "user_name": msg.user_name, 
                     })
                 )
         except ChatRoom.DoesNotExist:

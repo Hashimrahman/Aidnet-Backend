@@ -1,16 +1,18 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.db import transaction, IntegrityError
-from .models import CustomUser
-from .serializers import RegistrationSerializer, LoginSerializer, UserSerializer,PasswordResetSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError, transaction
+from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAdmin
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import CustomUser
+from .permissions import IsAdmin
+from .serializers import (LoginSerializer, PasswordResetSerializer,
+                          RegistrationSerializer, UserSerializer)
 
 User = get_user_model()
 

@@ -1,11 +1,11 @@
-from django.contrib.auth.models import Group
-from rest_framework import serializers
-from django.core.mail import send_mail
 from django.conf import settings
-from .models import CustomUser
-from django.contrib.auth import authenticate 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
+from django.core.mail import send_mail
+from rest_framework import serializers
+
+from .models import CustomUser
 
 User = get_user_model()
 
