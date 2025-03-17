@@ -15,19 +15,25 @@ class Campaign(models.Model):
     def __str__(self):
         return self.name
 
+
 class ChatRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    campaign = models.OneToOneField(Campaign, on_delete=models.CASCADE, related_name="chat_room")
+    campaign = models.OneToOneField(
+        Campaign, on_delete=models.CASCADE, related_name="chat_room"
+    )
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
+
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="messages")
+    chat_room = models.ForeignKey(
+        ChatRoom, on_delete=models.CASCADE, related_name="messages"
+    )
     user_id = models.IntegerField()
-    user_name = models.CharField(max_length=150,default="Unknown")
+    user_name = models.CharField(max_length=150, default="Unknown")
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

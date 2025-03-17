@@ -13,9 +13,9 @@ class CampaignListAPIView(APIView):
         serializer = CampaignSerializer(campaigns, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class ChatRoomListAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         chat_rooms = ChatRoom.objects.all()
         serializer = ChatRoomSerializer(chat_rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-

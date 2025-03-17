@@ -7,22 +7,48 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Donation',
+            name="Donation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(max_length=200)),
-                ('donor_id', models.IntegerField()),
-                ('quantity', models.PositiveIntegerField()),
-                ('description', models.TextField(blank=True, null=True)),
-                ('delivery_method', models.CharField(choices=[('Pickup', 'Available For Pickup'), ('Delivered', 'Will be delivered by Donor')], max_length=10)),
-                ('status', models.CharField(choices=[('Available', 'Available'), ('Delivered', 'Delivered')], default='Available', max_length=10)),
-                ('relief_campaign_id', models.UUIDField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("type", models.CharField(max_length=200)),
+                ("donor_id", models.IntegerField()),
+                ("quantity", models.PositiveIntegerField()),
+                ("description", models.TextField(blank=True, null=True)),
+                (
+                    "delivery_method",
+                    models.CharField(
+                        choices=[
+                            ("Pickup", "Available For Pickup"),
+                            ("Delivered", "Will be delivered by Donor"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Available", "Available"),
+                            ("Delivered", "Delivered"),
+                        ],
+                        default="Available",
+                        max_length=10,
+                    ),
+                ),
+                ("relief_campaign_id", models.UUIDField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

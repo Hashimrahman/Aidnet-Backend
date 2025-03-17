@@ -79,7 +79,7 @@ class CampaignParticipationView(APIView):
         role = request.user.role
         user_email = request.user.email
 
-    #join
+        # join
         if action == "join":
             participant_type = role
             if participant_type not in [

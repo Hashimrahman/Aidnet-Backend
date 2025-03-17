@@ -6,45 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('campaigns', '0001_initial'),
+        ("campaigns", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='campaign',
-            old_name='max_volunteers',
-            new_name='volunteers_required',
+            model_name="campaign",
+            old_name="max_volunteers",
+            new_name="volunteers_required",
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='collected_amount',
+            model_name="campaign",
+            name="collected_amount",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='description',
+            model_name="campaign",
+            name="description",
             field=models.TextField(null=True),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='location',
-            field=models.CharField(default='', max_length=255),
+            model_name="campaign",
+            name="location",
+            field=models.CharField(default="", max_length=255),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='organizer',
+            model_name="campaign",
+            name="organizer",
             field=models.IntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='start_date',
+            model_name="campaign",
+            name="start_date",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='status',
-            field=models.CharField(default='ongoing', max_length=50),
+            model_name="campaign",
+            name="status",
+            field=models.CharField(default="ongoing", max_length=50),
             preserve_default=False,
         ),
     ]

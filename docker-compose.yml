@@ -110,6 +110,46 @@ services:
       - aidnet_network
     command: >
       sh -c "sleep 15 && python chat/consumer.py"
+  
+  ai-service:
+    build: ./ai_service
+    container_name: ai_service
+    command: daphne -b 0.0.0.0 -p 8000 ai_service.asgi:application
+    ports:
+      - "8004:8000"
+    depends_on:
+      - redis
+    environment:
+      - GEMINI_API_KEY=AIzaSyCy2oq7Gn-ZRvyvwoA90EswHf7wz0O3ngk
+    networks:
+      - aidnet_network
+  
+  request-service:
+    build: ./request_service
+    container_name: request_service
+    ports:
+      - "8005:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    
+    volumes:
+      - ./request_service:/app
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      DJANGO_SETTINGS_MODULE: request_service.settings
+    networks:
+      - aidnet_network
+    command: >
+      sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+
 
   rabbitmq:
     image: rabbitmq:3-management

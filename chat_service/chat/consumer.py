@@ -3,7 +3,7 @@ import sys
 
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat_service.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chat_service.settings")
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 django.setup()
 
@@ -15,7 +15,8 @@ import pika
 from chat.models import Campaign, ChatRoom
 from django.utils import timezone
 
-logger = logging.getLogger('django')
+logger = logging.getLogger("django")
+
 
 def connect_to_rabbitmq():
     # connection to RabbitMQ
@@ -25,17 +26,21 @@ def connect_to_rabbitmq():
         try:
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(
-                    host="rabbitmq", credentials=pika.PlainCredentials("user", "password")
+                    host="rabbitmq",
+                    credentials=pika.PlainCredentials("user", "password"),
                 )
             )
             logger.info("Successfully connected to RabbitMQ")
             return connection
         except Exception as e:
-            logger.error(f"Failed to connect to RabbitMQ (attempt {attempt + 1}/{max_retries}): {e}")
+            logger.error(
+                f"Failed to connect to RabbitMQ (attempt {attempt + 1}/{max_retries}): {e}"
+            )
             if attempt < max_retries - 1:
                 time.sleep(retry_delay)
             else:
                 raise Exception("Could not connect to RabbitMQ after multiple attempts")
+
 
 def consume_campaign_events():
     # Listen for campaign creation events and store them in the db.
@@ -56,7 +61,9 @@ def consume_campaign_events():
                 end_date_str = event["end_date"]
                 end_date = None
                 if end_date_str and end_date_str != "None":
-                    end_date = timezone.datetime.fromisoformat(end_date_str.replace("Z", "+00:00")).date()
+                    end_date = timezone.datetime.fromisoformat(
+                        end_date_str.replace("Z", "+00:00")
+                    ).date()
                 logger.debug(f"Parsed end_date: {end_date}")
 
                 # Save campaign data locally
@@ -72,16 +79,19 @@ def consume_campaign_events():
                         "status": event["status"],
                     },
                 )
-                logger.info(f"Campaign {'created' if created else 'updated'}: {campaign.name}")
+                logger.info(
+                    f"Campaign {'created' if created else 'updated'}: {campaign.name}"
+                )
 
                 chat_room, chat_created = ChatRoom.objects.get_or_create(
-                    campaign=campaign,
-                    defaults={"name": f"Chat for {campaign.name}"}
+                    campaign=campaign, defaults={"name": f"Chat for {campaign.name}"}
                 )
                 if chat_created:
                     logger.info(f"Created chat room: {chat_room.name}")
                 else:
-                    logger.info(f"Chat room already exists for campaign: {campaign.name}")
+                    logger.info(
+                        f"Chat room already exists for campaign: {campaign.name}"
+                    )
 
             except Exception as e:
                 logger.error(f"Error processing campaign event: {e}", exc_info=True)
@@ -95,6 +105,7 @@ def consume_campaign_events():
     except Exception as e:
         logger.error(f"Consumer connection failed: {e}", exc_info=True)
         raise
+
 
 if __name__ == "__main__":
     consume_campaign_events()

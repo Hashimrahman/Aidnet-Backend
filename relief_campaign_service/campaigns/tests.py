@@ -12,14 +12,16 @@ class CampaignAPITestCase(TestCase):
     def setUp(self):
         """Initialize test data"""
         self.client = APIClient()
-        self.user = User.objects.create_user(username="testuser", password="password123")
+        self.user = User.objects.create_user(
+            username="testuser", password="password123"
+        )
         self.client.force_authenticate(user=self.user)
 
         self.campaign = Campaign.objects.create(
             name="Test Campaign",
             description="This is a test campaign",
             max_capacity=10,
-            remaining_capacity=10
+            remaining_capacity=10,
         )
 
     def test_create_campaign(self):
@@ -27,7 +29,7 @@ class CampaignAPITestCase(TestCase):
         data = {
             "name": "New Campaign",
             "description": "Campaign Description",
-            "max_capacity": 15
+            "max_capacity": 15,
         }
         response = self.client.post("/campaigns/create/", data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -42,18 +44,20 @@ class CampaignAPITestCase(TestCase):
     def test_join_campaign(self):
         """Test joining a campaign"""
         data = {"participant_type": "volunteer"}
-        response = self.client.post(f"/campaigns/{self.campaign.id}/join/", data, format="json")
+        response = self.client.post(
+            f"/campaigns/{self.campaign.id}/join/", data, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_leave_campaign(self):
         """Test leaving a campaign"""
         CampaignParticipation.objects.create(
-            campaign=self.campaign,
-            user_id=self.user.id,
-            participant_type="volunteer"
+            campaign=self.campaign, user_id=self.user.id, participant_type="volunteer"
         )
 
-        response = self.client.delete(f"/campaigns/{self.campaign.id}/leave/{self.user.id}/")
+        response = self.client.delete(
+            f"/campaigns/{self.campaign.id}/leave/{self.user.id}/"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     @patch("requests.get")

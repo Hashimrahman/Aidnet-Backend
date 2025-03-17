@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chat', '0002_chatroom_alter_campaign_end_date_and_more'),
+        ("chat", "0002_chatroom_alter_campaign_end_date_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='user_name',
-            field=models.CharField(default='', max_length=150),
+            model_name="message",
+            name="user_name",
+            field=models.CharField(default="", max_length=150),
             preserve_default=False,
         ),
     ]

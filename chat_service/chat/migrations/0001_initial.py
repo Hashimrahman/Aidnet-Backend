@@ -7,20 +7,19 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Campaign',
+            name="Campaign",
             fields=[
-                ('campaign_id', models.UUIDField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-                ('status', models.CharField(max_length=55)),
-                ('location', models.CharField(max_length=55)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
+                ("campaign_id", models.UUIDField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField()),
+                ("status", models.CharField(max_length=55)),
+                ("location", models.CharField(max_length=55)),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField()),
             ],
         ),
     ]

@@ -2,7 +2,8 @@ import requests
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
-USER_SERVICE_URL = "http://localhost:8000/user/users/" 
+USER_SERVICE_URL = "http://localhost:8000/user/users/"
+
 
 class IsAdminFromToken(BasePermission):
     def has_permission(self, request, view):

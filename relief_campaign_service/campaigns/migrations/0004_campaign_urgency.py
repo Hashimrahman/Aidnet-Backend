@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('campaigns', '0003_campaign_end_date_alter_campaign_status'),
+        ("campaigns", "0003_campaign_end_date_alter_campaign_status"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='campaign',
-            name='urgency',
-            field=models.CharField(choices=[('High', 'High'), ('Medium', 'Medium'), ('Low', 'Low')], default='Medium', max_length=10),
+            model_name="campaign",
+            name="urgency",
+            field=models.CharField(
+                choices=[("High", "High"), ("Medium", "Medium"), ("Low", "Low")],
+                default="Medium",
+                max_length=10,
+            ),
         ),
     ]

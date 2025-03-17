@@ -24,7 +24,7 @@ def process_message(ch, method, properties, body):
 
     try:
         user = CustomUser.objects.get(id=user_id)
-        
+
         user_data = {
             "id": user.id,
             "email": user.email,
@@ -39,9 +39,7 @@ def process_message(ch, method, properties, body):
         ch.basic_publish(
             exchange="",
             routing_key=properties.reply_to,
-            properties=pika.BasicProperties(
-                correlation_id=properties.correlation_id
-            ),
+            properties=pika.BasicProperties(correlation_id=properties.correlation_id),
             body=response,
         )
         print(f"Sent response to {properties.reply_to}")
@@ -51,8 +49,7 @@ def process_message(ch, method, properties, body):
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(
-        host="rabbitmq",
-        credentials=pika.PlainCredentials("user", "password")
+        host="rabbitmq", credentials=pika.PlainCredentials("user", "password")
     )
 )
 channel = connection.channel()

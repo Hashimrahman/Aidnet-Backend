@@ -15,17 +15,20 @@ class TestAPI(APIView):
 
 class DonationCreateAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         donor_id = request.user.id
-        request.data['donor_id'] = donor_id
+        request.data["donor_id"] = donor_id
         serializer = DonationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class AllDonationAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         donations = Donation.objects.all()
         serializer = DonationSerializer(donations, many=True)
@@ -46,6 +49,7 @@ class DonorDonationAPIView(APIView):
 
 class DonationDetailedAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, id, *args, **kwargs):
         try:
             donation = Donation.objects.get(id=id)
@@ -62,7 +66,7 @@ class DeleteDonationAPIView(APIView):
 
     def delete(self, request, donation_id):
         try:
-            donation = Donation.objects.get(id=donation_id, donor_id = request.user.id)
+            donation = Donation.objects.get(id=donation_id, donor_id=request.user.id)
             donation.delete()
             return Response(
                 {"message": f"Donation with id {donation_id} has been deleted"},
@@ -70,8 +74,10 @@ class DeleteDonationAPIView(APIView):
             )
         except Donation.DoesNotExist:
             return Response(
-                {"error": "Donation not found or not authorized"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Donation not found or not authorized"},
+                status=status.HTTP_404_NOT_FOUND,
             )
+
 
 class UpdateDonationAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -80,8 +86,11 @@ class UpdateDonationAPIView(APIView):
         try:
             donation = Donation.objects.get(id=donation_id, donor_id=request.user.id)
         except Donation.DoesNotExist:
-            return Response({"error": "Donation not found or not authorized"}, status=status.HTTP_404_NOT_FOUND)
-        request.data['donor_id'] = request.user.id
+            return Response(
+                {"error": "Donation not found or not authorized"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        request.data["donor_id"] = request.user.id
         serializer = DonationSerializer(donation, data=request.data, partial=False)
         if serializer.is_valid():
             serializer.save()

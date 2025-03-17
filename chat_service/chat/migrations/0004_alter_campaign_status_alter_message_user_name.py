@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chat', '0003_message_user_name'),
+        ("chat", "0003_message_user_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='campaign',
-            name='status',
+            model_name="campaign",
+            name="status",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='message',
-            name='user_name',
-            field=models.CharField(default='Unknown', max_length=150),
+            model_name="message",
+            name="user_name",
+            field=models.CharField(default="Unknown", max_length=150),
         ),
     ]

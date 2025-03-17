@@ -10,12 +10,13 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-logger = logging.getLogger('django')
+logger = logging.getLogger("django")
+
 
 class CustomJWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
         auth_header = request.headers.get("Authorization")
-        logger.info(f"Received Auth Header: {auth_header}") 
+        logger.info(f"Received Auth Header: {auth_header}")
 
         if not auth_header or not auth_header.startswith("Bearer "):
             logger.warning("No valid token found.")
@@ -24,7 +25,9 @@ class CustomJWTAuthentication(BaseAuthentication):
         token = auth_header.split(" ")[1]
 
         try:
-            decoded_token = jwt.decode(token, settings.SIMPLE_JWT["SIGNING_KEY"], algorithms=["HS256"])
+            decoded_token = jwt.decode(
+                token, settings.SIMPLE_JWT["SIGNING_KEY"], algorithms=["HS256"]
+            )
             logger.info(f"Decoded JWT: {decoded_token}")
 
             user_id = decoded_token.get("user_id")
@@ -36,12 +39,12 @@ class CustomJWTAuthentication(BaseAuthentication):
 
             logger.info(f"User fetched from RabbitMQ: {user_data}")
 
-            # Convert the dictionary to an object 
+            # Convert the dictionary to an object
             user_object = SimpleNamespace(
                 id=user_data["id"],
                 email=user_data["email"],
                 role=user_data["role"],
-                is_authenticated=True, 
+                is_authenticated=True,
             )
 
             return (user_object, None)
@@ -52,7 +55,6 @@ class CustomJWTAuthentication(BaseAuthentication):
             logger.error("Invalid JWT Token.")
             raise AuthenticationFailed("Invalid token")
 
-
     def get_user_from_rabbitmq(self, user_id):
         logger.info(f"Fetching user_id {user_id} from RabbitMQ")
 
@@ -61,7 +63,7 @@ class CustomJWTAuthentication(BaseAuthentication):
 
         result = channel.queue_declare(queue="", exclusive=True)
         reply_queue = result.method.queue
-        correlation_id = str(uuid.uuid4()) 
+        correlation_id = str(uuid.uuid4())
 
         channel.basic_publish(
             exchange="",
@@ -75,7 +77,9 @@ class CustomJWTAuthentication(BaseAuthentication):
 
         logger.info(f"Waiting for response in {reply_queue}")
 
-        for method_frame, properties, body in channel.consume(queue=reply_queue, inactivity_timeout=5):
+        for method_frame, properties, body in channel.consume(
+            queue=reply_queue, inactivity_timeout=5
+        ):
             if properties and properties.correlation_id == correlation_id:
                 channel.basic_ack(method_frame.delivery_tag)
                 user_data = json.loads(body)
@@ -85,5 +89,3 @@ class CustomJWTAuthentication(BaseAuthentication):
 
         logger.warning("No user data received from RabbitMQ")
         return AnonymousUser()
-
-

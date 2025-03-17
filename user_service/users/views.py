@@ -11,8 +11,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser
 from .permissions import IsAdmin
-from .serializers import (LoginSerializer, PasswordResetSerializer,
-                          RegistrationSerializer, UserSerializer)
+from .serializers import (
+    LoginSerializer,
+    PasswordResetSerializer,
+    RegistrationSerializer,
+    UserSerializer,
+)
 
 User = get_user_model()
 
@@ -49,7 +53,9 @@ class RegistrationView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ========================================================== ==========================================================
+
 
 class VerifyEmailView(APIView):
     def get(self, request, token):
@@ -73,7 +79,9 @@ class VerifyEmailView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+
 # ========================================================== ==========================================================
+
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
@@ -100,18 +108,23 @@ class LoginView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 # ========================================================== ==========================================================
+
 
 class ListUsersAPIView(ListAPIView):
 
     permission_classes = [IsAdmin]
+
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
+
 # ========================================================== ==========================================================
+
 
 class UserDetailView(APIView):
     def get(self, request, id, *args, **kwargs):
@@ -120,12 +133,17 @@ class UserDetailView(APIView):
             serializer = UserSerializer(user)
             return Response(serializer.data)
         except User.DoesNotExist:
-            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
 
 # ========================================================== ==========================================================
 
+
 class DeleteUserAPIView(APIView):
     permission_classes = [IsAdmin]
+
     def delete(self, request, user_id):
         try:
             user = User.objects.get(id=user_id)
@@ -139,21 +157,29 @@ class DeleteUserAPIView(APIView):
                 {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
+
 # ========================================================== ==========================================================
+
 
 class ResetPasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = PasswordResetSerializer(data=request.data, context={'request':request})
+        serializer = PasswordResetSerializer(
+            data=request.data, context={"request": request}
+        )
 
         if serializer.is_valid():
             serializer.update_password(request.user)
-            return Response({"message": "Password reset successfully."}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Password reset successfully."}, status=status.HTTP_200_OK
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 # ========================================================== ==========================================================
+
 
 class GetUserView(APIView):
     def get(self, request, user_id):
@@ -163,20 +189,25 @@ class GetUserView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
 
+
 # ========================================================== ==========================================================
 
 
 class VerifyTokenView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = request.user
-        return Response({
-            "id": user.id,
-            "full_name": f"{user.first_name} {user.last_name}",
-            "email": user.email,
-            "role": user.role,  
-            "phone_number": user.phone_number,
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "id": user.id,
+                "full_name": f"{user.first_name} {user.last_name}",
+                "email": user.email,
+                "role": user.role,
+                "phone_number": user.phone_number,
+            },
+            status=status.HTTP_200_OK,
+        )
         # auth_header = request.headers.get("Authorization", "")
         # if not auth_header.startswith("Bearer "):
         #     return Response(
@@ -189,13 +220,13 @@ class VerifyTokenView(APIView):
 
         # try:
         #     validated_token = authenticator.get_validated_token(token)
-        #     user_id = validated_token["user_id"] 
-        #     user = User.objects.get(id=user_id)  
+        #     user_id = validated_token["user_id"]
+        #     user = User.objects.get(id=user_id)
         #     return Response({
         #         "id": user.id,
         #         "first_name": user.first_name,
         #         "email": user.email,
-        #         "role": user.role, 
+        #         "role": user.role,
         #         "phone_number": user.phone_number,
         #     }, status=status.HTTP_200_OK)
         # except InvalidToken:
@@ -218,7 +249,6 @@ class VerifyTokenView(APIView):
         #         {"error": f"Server error: {str(e)}"},
         #         status=status.HTTP_500_INTERNAL_SERVER_ERROR
         #     )
-        
 
 
 # ========================================================== ==========================================================

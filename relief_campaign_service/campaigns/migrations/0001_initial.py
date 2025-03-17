@@ -10,29 +10,58 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Campaign',
+            name="Campaign",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('max_capacity', models.PositiveIntegerField(default=0)),
-                ('remaining_capacity', models.PositiveIntegerField(default=0)),
-                ('max_volunteers', models.PositiveIntegerField(default=0)),
-                ('volunteers_registered', models.PositiveIntegerField(default=0)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("max_capacity", models.PositiveIntegerField(default=0)),
+                ("remaining_capacity", models.PositiveIntegerField(default=0)),
+                ("max_volunteers", models.PositiveIntegerField(default=0)),
+                ("volunteers_registered", models.PositiveIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
-            name='CampaignParticipation',
+            name="CampaignParticipation",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('user_id', models.UUIDField()),
-                ('participant_type', models.CharField(choices=[('volunteer', 'Volunteer'), ('affected', 'Affected')], default='affected', max_length=20)),
-                ('joined_at', models.DateTimeField(auto_now_add=True)),
-                ('campaign', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='participations', to='campaigns.campaign')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("user_id", models.UUIDField()),
+                (
+                    "participant_type",
+                    models.CharField(
+                        choices=[("volunteer", "Volunteer"), ("affected", "Affected")],
+                        default="affected",
+                        max_length=20,
+                    ),
+                ),
+                ("joined_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "campaign",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="participations",
+                        to="campaigns.campaign",
+                    ),
+                ),
             ],
         ),
     ]
