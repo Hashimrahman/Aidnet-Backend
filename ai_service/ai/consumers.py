@@ -53,7 +53,6 @@
 #             }))
 
 
-# ai_service/ai/consumers.py
 import json
 import logging
 import google.generativeai as genai

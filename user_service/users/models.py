@@ -37,6 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email_verified = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
     is_banned = models.BooleanField(default=False, blank=True, null=True)
+    is_deleted = models.BooleanField(default=False, blank=True, null=True)
 
     role = models.CharField(
         max_length=20,

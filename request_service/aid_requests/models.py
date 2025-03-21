@@ -12,6 +12,7 @@ class Request(models.Model):
         ("pending", "Pending"),
         ("resolved", "Resolved"),
         ("rejected", "Rejected"),
+        ("cancelled", "Cancelled"),
     ]
 
     REQUEST_TYPE_CHOICES = [
@@ -32,6 +33,7 @@ class Request(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_cancelled = models.BooleanField(blank=True, null=True, default=False)
 
     def __str__(self):
         return f"Request {self.id} - {self.request_type} - {self.urgency_level} ({self.status})"

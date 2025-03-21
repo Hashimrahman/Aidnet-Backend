@@ -5,6 +5,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -208,47 +209,35 @@ class VerifyTokenView(APIView):
             },
             status=status.HTTP_200_OK,
         )
-        # auth_header = request.headers.get("Authorization", "")
-        # if not auth_header.startswith("Bearer "):
-        #     return Response(
-        #         {"error": "Invalid or missing Authorization header"},
-        #         status=status.HTTP_401_UNAUTHORIZED
-        #     )
 
-        # token = auth_header.split(" ")[1]
-        # authenticator = JWTAuthentication()
 
-        # try:
-        #     validated_token = authenticator.get_validated_token(token)
-        #     user_id = validated_token["user_id"]
-        #     user = User.objects.get(id=user_id)
-        #     return Response({
-        #         "id": user.id,
-        #         "first_name": user.first_name,
-        #         "email": user.email,
-        #         "role": user.role,
-        #         "phone_number": user.phone_number,
-        #     }, status=status.HTTP_200_OK)
-        # except InvalidToken:
-        #     return Response(
-        #         {"error": "Invalid token"},
-        #         status=status.HTTP_401_UNAUTHORIZED
-        #     )
-        # except TokenError as e:
-        #     return Response(
-        #         {"error": f"Token error: {str(e)}"},
-        #         status=status.HTTP_401_UNAUTHORIZED
-        #     )
-        # except User.DoesNotExist:
-        #     return Response(
-        #         {"error": "User not found"},
-        #         status=status.HTTP_404_NOT_FOUND
-        #     )
-        # except Exception as e:
-        #     return Response(
-        #         {"error": f"Server error: {str(e)}"},
-        #         status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        #     )
+# ========================================================== ==========================================================
+
+
+class BanUnbanUserAPIView(APIView):
+
+    def post(self, request, user_id):
+        user = get_object_or_404(CustomUser, pk=user_id)
+        action = request.data.get("action")
+
+        if action == "ban":
+            if user.is_banned:
+                return Response(
+                    {"message": f"User {user.email} is already banned."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            user.is_banned = True
+            user.save()
+            return Response(
+                {"message": f"User {user.email} has been banned."},
+                status=status.HTTP_200_OK,
+            )
+
+
+# ========================================================== ==========================================================
+
+
+# ========================================================== ==========================================================
 
 
 # ========================================================== ==========================================================
